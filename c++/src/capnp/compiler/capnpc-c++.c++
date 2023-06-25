@@ -521,11 +521,13 @@ private:
 
       case schema::Type::LIST: {
         CppTypeName result = CppTypeName::makeNamespace("capnp");
-        auto params = kj::heapArrayBuilder<CppTypeName>(2);
         auto list = type.asList();
+        auto params = kj::heapArrayBuilder<CppTypeName>(1);
         params.add(typeName(list.getElementType(), method));
-        params.add(whichKind(list.getElementType()));
-        result.addMemberTemplate("List", params.finish());
+        //params.add(whichKind(list.getElementType()));
+
+        result.addMemberTemplate("ListMaybeAny", params.finish());
+        result.addMemberType("type");
         return result;
       }
 

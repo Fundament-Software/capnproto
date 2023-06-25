@@ -8,6 +8,7 @@ include(CTest)
 include(CheckIncludeFileCXX)
 include(GNUInstallDirs)
 if(MSVC)
+  set(CMAKE_CXX_STANDARD 17) # we have to force MSVC to C++17 for exactly one reason: https://godbolt.org/z/8bfn4saTb
   check_include_file_cxx(initializer_list HAS_CXX14)
 else()
   check_include_file_cxx(initializer_list HAS_CXX14 "-std=gnu++1y")

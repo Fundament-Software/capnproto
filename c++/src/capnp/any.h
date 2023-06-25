@@ -1126,6 +1126,13 @@ inline PipelineHook& PipelineHook::from(Pipeline& pipeline) {
 
 #endif  // !CAPNP_LITE
 
+
+template<class T>
+struct ListMaybeAny { using type = List<T>; };
+
+template<>
+struct ListMaybeAny<AnyPointer> { using type = AnyList; };
+
 }  // namespace capnp
 
 CAPNP_END_HEADER
