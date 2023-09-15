@@ -149,7 +149,7 @@ TEST(Capability, Pipelining) {
   int callCount = 0;
   int chainedCallCount = 0;
   test::TestPipeline::Client client(kj::heap<TestPipelineImpl>(callCount));
-
+  
   auto request = client.getCapRequest();
   request.setN(234);
   request.setInCap(test::TestInterface::Client(kj::heap<TestInterfaceImpl>(chainedCallCount)));
