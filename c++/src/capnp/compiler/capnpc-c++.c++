@@ -521,13 +521,19 @@ private:
 
       case schema::Type::LIST: {
         CppTypeName result = CppTypeName::makeNamespace("capnp");
+        const char* listType = "List";
         auto list = type.asList();
+
+        if (list.getElementType().which() == schema::Type::ANY_POINTER) {
+          KJ_IF_MAYBE(param, list.getElementType().getBrandParameter()) {
+            listType = "TypedAnyList";
+          }
+        }
+
         auto params = kj::heapArrayBuilder<CppTypeName>(1);
         params.add(typeName(list.getElementType(), method));
-        //params.add(whichKind(list.getElementType()));
 
-        result.addMemberTemplate("ListMaybeAny", params.finish());
-        result.addMemberType("type");
+        result.addMemberTemplate(listType, params.finish());
         return result;
       }
 
@@ -1592,6 +1598,7 @@ private:
       bool shouldIncludePipelineGetter = !hasDiscriminantValue(proto) &&
           (kind == FieldKind::STRUCT || kind == FieldKind::BRAND_PARAMETER);
       bool shouldIncludeArrayInitializer = false;
+      bool shouldIncludeCheckedArrayInitializer = false;
       bool shouldExcludeInLiteMode = type.hasInterfaces();
       bool shouldTemplatizeInit = typeSchema.which() == schema::Type::ANY_POINTER &&
           kind != FieldKind::BRAND_PARAMETER;
@@ -1628,7 +1635,7 @@ private:
 
           case schema::Type::ANY_POINTER:
             primitiveElement = false;
-            shouldIncludeArrayInitializer = elementType.getBrandParameter() != nullptr;
+            shouldIncludeCheckedArrayInitializer = elementType.getBrandParameter() != nullptr;
             break;
 
           case schema::Type::INTERFACE:
@@ -1687,6 +1694,8 @@ private:
             "  inline ", builderType, " get", titleCase, "();\n"
             "  inline void set", titleCase, "(", readerType, " value);\n",
             COND(shouldIncludeArrayInitializer,
+              "  inline void set", titleCase, "(::kj::ArrayPtr<const ", elementReaderType, "> value);\n"),
+            COND(shouldIncludeCheckedArrayInitializer,
               "  inline void set", titleCase, "(::kj::ArrayPtr<const ", elementReaderType, "> value);\n"),
             COND(shouldIncludeStructInit,
               COND(shouldTemplatizeInit,
@@ -1749,7 +1758,7 @@ private:
             "  ::capnp::_::PointerHelpers<", type, ">::set(_builder.getPointerField(\n"
             "      ::capnp::bounded<", offset, ">() * ::capnp::POINTERS), value);\n"
             "}\n",
-            COND(shouldIncludeArrayInitializer,
+            COND(shouldIncludeArrayInitializer || shouldIncludeCheckedArrayInitializer,
               templateContext.allDecls(),
               "inline void ", scope, "Builder::set", titleCase, "(::kj::ArrayPtr<const ", elementReaderType, "> value) {\n",
               unionDiscrim.set,
