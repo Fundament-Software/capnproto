@@ -313,6 +313,12 @@ inline constexpr uint sizeInWords() {
       _::structSize<T>().pointers * WORDS_PER_POINTER) / WORDS);
 }
 
+template<class, class = void>
+struct EnableIfReader : std::false_type {};
+
+template<class T>
+struct EnableIfReader<T, std::void_t<typename T::Reader>> : std::true_type { };
+
 }  // namespace capnp
 
 #if _MSC_VER && !defined(__clang__)

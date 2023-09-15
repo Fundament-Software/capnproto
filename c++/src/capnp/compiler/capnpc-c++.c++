@@ -1648,7 +1648,8 @@ private:
             break;
         }
         elementReaderType = typeName(elementType, nullptr);
-        if (!primitiveElement) {
+        // The checked array initializer uses a differnt codepath that removes itself if the template argument is an interface.
+        if (!primitiveElement && !shouldIncludeCheckedArrayInitializer) {
           if (interface) {
             elementReaderType.addMemberType("Client");
           } else {
@@ -1696,7 +1697,7 @@ private:
             COND(shouldIncludeArrayInitializer,
               "  inline void set", titleCase, "(::kj::ArrayPtr<const ", elementReaderType, "> value);\n"),
             COND(shouldIncludeCheckedArrayInitializer,
-              "  inline void set", titleCase, "(::kj::ArrayPtr<const ", elementReaderType, "> value);\n"),
+              "  template<typename U = ", elementReaderType, "> inline void set", titleCase, "(::kj::ArrayPtr<const typename std::enable_if<::capnp::EnableIfReader<U>::value, typename U::Reader>::type> value);\n"),
             COND(shouldIncludeStructInit,
               COND(shouldTemplatizeInit,
                 "  template <typename T_>\n"
@@ -1758,9 +1759,16 @@ private:
             "  ::capnp::_::PointerHelpers<", type, ">::set(_builder.getPointerField(\n"
             "      ::capnp::bounded<", offset, ">() * ::capnp::POINTERS), value);\n"
             "}\n",
-            COND(shouldIncludeArrayInitializer || shouldIncludeCheckedArrayInitializer,
+            COND(shouldIncludeArrayInitializer,
               templateContext.allDecls(),
               "inline void ", scope, "Builder::set", titleCase, "(::kj::ArrayPtr<const ", elementReaderType, "> value) {\n",
+              unionDiscrim.set,
+              "  ::capnp::_::PointerHelpers<", type, ">::set(_builder.getPointerField(\n"
+            "      ::capnp::bounded<", offset, ">() * ::capnp::POINTERS), value);\n"
+              "}\n"),
+            COND(shouldIncludeCheckedArrayInitializer,
+              templateContext.allDecls(),
+              "template<typename U> inline void ", scope, "Builder::set", titleCase, "(::kj::ArrayPtr<const typename std::enable_if<::capnp::EnableIfReader<U>::value, typename U::Reader>::type> value) {\n",
               unionDiscrim.set,
               "  ::capnp::_::PointerHelpers<", type, ">::set(_builder.getPointerField(\n"
             "      ::capnp::bounded<", offset, ">() * ::capnp::POINTERS), value);\n"

@@ -1208,6 +1208,10 @@ TEST(Encoding, UpgradeListInBuilder) {
     EXPECT_NONFATAL_FAILURE(root.getAnyPointerField().getAs<List<uint64_t>>());
     checkList(root.getAnyPointerField().getAs<List<Text>>(), {"foo", "bar", "baz"});
 
+    auto ptrlist = root.getAnyPointerField().getAs<AnyList>();
+    ASSERT_EQ(3, ptrlist.size());
+    checkList(ptrlist.as<List<Text>>(), { "foo", "bar", "baz" });
+
     checkList(orig, {"foo", "bar", "baz"});
     checkUpgradedList(root, {0, 0, 0}, {"foo", "bar", "baz"});
     checkList(orig, {"", "", ""});  // old location zero'd during upgrade
