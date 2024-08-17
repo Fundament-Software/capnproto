@@ -1,0 +1,19 @@
+[package]
+name = "kj-async-sys"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+links = "kj-async"
+
+[lib]
+path = "lib.rs"
+
+[dependencies]
+cxx.workspace = true
+kj-sys.workspace = true
+
+[build-dependencies]
+eyre.workspace = true
+cc.workspace = true
+cxx-build.workspace = true
+kj-build.workspace = true
