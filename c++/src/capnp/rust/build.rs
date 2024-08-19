@@ -125,6 +125,7 @@ fn main() -> eyre::Result<()> {
         println!("cargo:rustc-link-lib=dl");
     }
 
+    build.opt_level(3);
     build.warnings(false).std("c++20").compile("capnp");
 
     Ok(())

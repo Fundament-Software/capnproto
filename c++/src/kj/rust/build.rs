@@ -169,7 +169,7 @@ fn main() -> Result<()> {
     build.flag_if_supported("/Zc:__cplusplus");
     build.flag_if_supported("/EHsc");
     build.flag_if_supported("/TP");
-
+    build.opt_level(3);
     build.warnings(false).std("c++20").compile("kj");
 
     Ok(())

@@ -13,6 +13,7 @@ using namespace compiler;
 class ErrorImpl : public kj::Exception, public std::exception {
 public:
   inline ErrorImpl(Exception&& other) : Exception(kj::mv(other)) { }
+  inline ErrorImpl(const ErrorImpl& self) : Exception(self) { }
 
   const char* what() const noexcept override {
     whatBuffer = kj::str(*this);
@@ -225,7 +226,10 @@ rust::Vec<uint8_t> command(rust::Slice<const rust::String> files,
 
   KJ_IF_SOME(out, glue.generateOutput()) {
     auto bytes = out.asBytes();
-    return rust::Vec<uint8_t>(std::initializer_list<uint8_t>(bytes.begin(), bytes.end()));
+    rust::Vec<uint8_t> result;
+    result.reserve(bytes.size());
+    std::move(bytes.begin(), bytes.end(), std::back_inserter(result));
+    return result;
   }
 
   glue.throwErrors(__FILE__, __LINE__);
