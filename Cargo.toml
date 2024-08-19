@@ -1,9 +1,10 @@
 [workspace]
 resolver = "2"
 members = [
-    "c++/src/capnp/compiler",
-    "c++/src/capnp",
+    "c++/src/capnp/compiler/rust",
+    "c++/src/capnp/rust",
     "c++/src/kj/rust",
+    #"c++/src/kj/compat",
     "c++/src/kj/build",
 ]
 
@@ -21,11 +22,6 @@ cxx = "1.0.76"
 eyre = "0.6.12"
 cc = "1.0.73"
 cxx-build = "1.0.76"
-capnp-sys = { path = "c++/src/capnp", default-features = false, features = [
-    "heavy",
-] }
-kj-async-sys = { path = "c++/src/kj/async", default-features = false }
-kj-sys = { path = "c++/src/kj/rust", default-features = false, features = [
-    "heavy",
-] }
+#kj-compat-sys = { path = "c++/src/kj/compat" }
+kj-sys = { path = "c++/src/kj/rust" }
 kj-build = { path = "c++/src/kj/build" }

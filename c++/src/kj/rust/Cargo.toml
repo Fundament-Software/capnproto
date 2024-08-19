@@ -9,7 +9,8 @@ links = "kj"
 path = "lib.rs"
 
 [features]
-default = ["heavy"]
+default = []
+async = []
 heavy = []
 libdl = []
 save_acquired_lock_info = []

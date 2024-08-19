@@ -6,16 +6,21 @@ license.workspace = true
 links = "kj-gzip"
 
 [lib]
+path = "lib.rs"
 
 [features]
-default = []
-zlib = ["dep:libz-sys"]
+default = ["zlib"]
+libdl = ["kj-sys/libdl"]
+save_acquired_lock_info = ["kj-sys/save_acquired_lock_info"]
+track_lock_blocking = ["kj-sys/track_lock_blocking"]
+zlib = ["libz-sys"]
 
 [dependencies]
 cxx = "1.0.76"
-kj-async-sys.workspace = true
 kj-sys.workspace = true
-libz-sys = { version = "1.1.8", optional = true }
+libz-sys = { version = "1.1", default-features = false, features = [
+  "libc",
+], optional = true }
 
 [build-dependencies]
 eyre.workspace = true
