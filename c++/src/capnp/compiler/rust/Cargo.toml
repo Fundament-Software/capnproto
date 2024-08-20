@@ -2,6 +2,7 @@
 name = "capnpc-sys"
 version.workspace = true
 edition.workspace = true
+license.workspace = true
 links = "capnpc"
 
 [lib]

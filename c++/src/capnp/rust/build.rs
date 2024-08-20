@@ -80,7 +80,7 @@ fn main() -> eyre::Result<()> {
     stage_files(
         &mut build,
         CAPNP_HEADERS
-            .into_iter()
+            .iter()
             .chain(CAPNP_COMPAT_HEADERS)
             .chain(CAPNP_PRIVATE_HEADERS)
             .chain(CAPNP_EXTRAS),
@@ -91,7 +91,7 @@ fn main() -> eyre::Result<()> {
 
     stage_files(
         &mut build,
-        CAPNP_SOURCES_LITE.into_iter(),
+        CAPNP_SOURCES_LITE.iter(),
         source_dir,
         &capnp_source_dir,
         true,
@@ -100,7 +100,7 @@ fn main() -> eyre::Result<()> {
     if CAPNP_HEAVY {
         stage_files(
             &mut build,
-            CAPNP_SOURCES_HEAVY.into_iter(),
+            CAPNP_SOURCES_HEAVY.iter(),
             source_dir,
             &capnp_source_dir,
             true,

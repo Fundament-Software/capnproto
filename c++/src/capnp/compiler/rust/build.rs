@@ -49,7 +49,7 @@ fn main() -> eyre::Result<()> {
     stage_files(
         &mut build,
         CAPNPC_HEADERS
-            .into_iter()
+            .iter()
             .chain(CAPNPC_PRIVATE_HEADERS)
             .chain(CAPNPC_EXTRAS),
         source_dir,
@@ -59,7 +59,7 @@ fn main() -> eyre::Result<()> {
 
     stage_files(
         &mut build,
-        CAPNPC_SOURCES.into_iter(),
+        CAPNPC_SOURCES.iter(),
         source_dir,
         &capnpc_source_dir,
         true,
@@ -67,7 +67,7 @@ fn main() -> eyre::Result<()> {
 
     stage_files(
         &mut build,
-        ["glue.h"].into_iter(),
+        ["glue.h"].iter(),
         ".",
         &capnpc_source_dir,
         false,
@@ -75,7 +75,7 @@ fn main() -> eyre::Result<()> {
 
     stage_files(
         &mut build,
-        ["jank.c++", "glue.c++"].into_iter(),
+        ["jank.c++", "glue.c++"].iter(),
         ".",
         &capnpc_source_dir,
         true,

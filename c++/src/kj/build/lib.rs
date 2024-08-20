@@ -35,12 +35,7 @@ fn bool_int_str(p: bool) -> &'static str {
     }
 }
 
-pub fn kj_configure<'a>(
-    build: &'a mut cc::Build,
-    heavy: bool,
-    track: bool,
-    save: bool,
-) -> &'a mut cc::Build {
+pub fn kj_configure(build: &mut cc::Build, heavy: bool, track: bool, save: bool) -> &mut cc::Build {
     if !heavy {
         build.define("CAPNP_LITE", None);
     }

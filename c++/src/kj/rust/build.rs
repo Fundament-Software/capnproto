@@ -111,7 +111,7 @@ fn main() -> Result<()> {
     stage_files(
         &mut build,
         KJ_HEADERS
-            .into_iter()
+            .iter()
             .chain(KJ_PARSE_HEADERS)
             .chain(KJ_STD_HEADERS)
             .chain(KJ_PRIVATE_HEADERS)
@@ -124,7 +124,7 @@ fn main() -> Result<()> {
 
     stage_files(
         &mut build,
-        KJ_SOURCES_LITE.into_iter(),
+        KJ_SOURCES_LITE.iter(),
         source_dir,
         &kj_source_dir,
         true,
@@ -135,7 +135,7 @@ fn main() -> Result<()> {
     if cfg!(feature = "async") {
         stage_files(
             &mut build,
-            KJ_ASYNC_SOURCES.into_iter(),
+            KJ_ASYNC_SOURCES.iter(),
             source_dir,
             &kj_source_dir,
             true,
@@ -145,7 +145,7 @@ fn main() -> Result<()> {
     if CAPNP_HEAVY {
         stage_files(
             &mut build,
-            KJ_SOURCES_HEAVY.into_iter(),
+            KJ_SOURCES_HEAVY.iter(),
             source_dir,
             &kj_source_dir,
             true,
